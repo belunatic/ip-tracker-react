@@ -1,12 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, type SetStateAction } from "react";
 
-export default function IpData() {
-	const [ipData, setIpData] = useState({});
+interface IpResult {
+	ip?: string;
+	city?: string;
+	zipCode?: string;
+	timezone?: string;
+	isp?: string;
+}
+
+interface IpDataProps {
+	options: string;
+	ipData: IpResult;
+	setIpData: React.Dispatch<SetStateAction<IpResult>>;
+}
+
+export default function IpData({ options, ipData, setIpData }: IpDataProps) {
 	//apikey
 	const apiKey = import.meta.env.VITE_API_KEY;
 
 	useEffect(() => {
-		const apiFetch = async (options = "") => {
+		const apiFetch = async () => {
 			try {
 				const res = await fetch(
 					`https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}${options}`
@@ -17,18 +30,22 @@ export default function IpData() {
 				}
 				//get the data
 				const data = await res.json();
-				console.log(data);
-				setIpData(data);
-				/**
-				 * MAP DATA
-				 */
-				//displayMap(data.location.lat, data.location.lng);
+				const ipObject = {
+					ip: data.ip,
+					city: `${(data.location.city, data.location.region)}`,
+					zipCode: data.location.postalCode,
+					timezone: `UTC ${data.location.timezone}`,
+					isp: data.isp,
+				};
+
+				//console.log(ipObject);
+				setIpData(ipObject);
 			} catch (error) {
 				console.error(error);
 			}
 		};
 
-		// apiFetch();
+		apiFetch();
 	}, []);
 
 	return (
@@ -51,9 +68,9 @@ export default function IpData() {
 				</h2>
 				<p className="font-semibold text-xl md:text-2xl md:text-left text-center">
 					<span id="city" className="block">
-						{ipData.location?.city}, {ipData.location?.region}
+						{ipData.city}
 					</span>
-					<span id="zip-code"> {ipData.location?.postalCode}</span>
+					<span id="zip-code"> {ipData.zipCode}</span>
 				</p>
 			</div>
 			<div className="md:w-1/4 w-full md:border-r-1 border-gray-200">
@@ -63,7 +80,7 @@ export default function IpData() {
 				<p
 					id="timezone"
 					className="font-semibold text-xl md:text-2xl md:text-left text-center">
-					{ipData.location.timezone}
+					{ipData.timezone}
 				</p>
 			</div>
 			<div className="md:w-1/4 w-full">

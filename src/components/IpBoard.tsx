@@ -3,9 +3,17 @@ import FormInput from "./FormInput";
 import IpData from "./IpData";
 import IpMap from "./IpMap";
 
+interface IpResult {
+	ip?: string;
+	city?: string;
+	zipCode?: string;
+	timezone?: string;
+	isp?: string;
+}
+
 export default function IpBoard() {
 	const [options, setOptions] = useState<string>("");
-	const [ipData, setIpData] = useState(null);
+	const [ipResultData, setIpResultData] = useState<IpResult>({});
 
 	return (
 		<>
@@ -15,7 +23,11 @@ export default function IpBoard() {
 						IP Address Tracker
 					</h1>
 					<FormInput setOptions={setOptions} />
-					{/* <IpData /> */}
+					<IpData
+						options={options}
+						setIpData={setIpResultData}
+						ipData={ipResultData}
+					/>
 				</div>
 			</header>
 
