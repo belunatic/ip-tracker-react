@@ -1,0 +1,81 @@
+import { useEffect, useState } from "react";
+
+export default function IpData() {
+	const [ipData, setIpData] = useState({});
+	//apikey
+	const apiKey = import.meta.env.VITE_API_KEY;
+
+	useEffect(() => {
+		const apiFetch = async (options = "") => {
+			try {
+				const res = await fetch(
+					`https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}${options}`
+				);
+
+				if (!res.ok) {
+					throw new Error(`Fetching error, status -> ${res.status}`);
+				}
+				//get the data
+				const data = await res.json();
+				console.log(data);
+				setIpData(data);
+				/**
+				 * MAP DATA
+				 */
+				//displayMap(data.location.lat, data.location.lng);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		// apiFetch();
+	}, []);
+
+	return (
+		<div
+			id="ip-results"
+			className="max-w-[85rem] bg-white rounded-lg flex flex-col md:flex-row gap-y-4 md:gap-x-4 px-4 py-8">
+			<div className="md:w-1/4 w-full md:border-r-1 border-gray-200">
+				<h2 className="font-bold text-xs text-gray-400 md:text-left text-center uppercase">
+					IP address
+				</h2>
+				<p
+					id="ip"
+					className="font-semibold text-xl md:text-2xl md:text-left text-center">
+					{ipData.ip}
+				</p>
+			</div>
+			<div className="md:w-1/4 w-full md:border-r-1 border-gray-200">
+				<h2 className="font-bold text-xs text-gray-400 md:text-left text-center uppercase">
+					Locations
+				</h2>
+				<p className="font-semibold text-xl md:text-2xl md:text-left text-center">
+					<span id="city" className="block">
+						{ipData.location?.city}, {ipData.location?.region}
+					</span>
+					<span id="zip-code"> {ipData.location?.postalCode}</span>
+				</p>
+			</div>
+			<div className="md:w-1/4 w-full md:border-r-1 border-gray-200">
+				<h2 className="font-bold text-xs text-gray-400 md:text-left text-center uppercase">
+					Timezone
+				</h2>
+				<p
+					id="timezone"
+					className="font-semibold text-xl md:text-2xl md:text-left text-center">
+					{ipData.location.timezone}
+				</p>
+			</div>
+			<div className="md:w-1/4 w-full">
+				<h2 className="font-bold text-xs text-gray-400 md:text-left text-center uppercase">
+					ISP
+				</h2>
+				<p
+					id="isp"
+					className="font-semibold text-xl md:text-2xl md:text-left text-center">
+					{ipData.isp}
+				</p>
+			</div>
+		</div>
+	);
+}
