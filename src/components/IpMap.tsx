@@ -24,7 +24,6 @@ export default function IpMap({ ipMapData }: IpMapProps) {
 		// popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
 	});
 
-	console.log(ipMapData, ipMapData.lon, ipMapData.lat, "This is...");
 	return (
 		<>
 			<div id="map" className="h-full flex-grow">

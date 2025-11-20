@@ -44,7 +44,7 @@ export default function IpBoard() {
 					lon: data.location.lng,
 				};
 
-				console.log(data, "this is the object", ipObject);
+				// console.log(data, "this is the object", ipObject);
 				setIpData(ipObject);
 				setLoading(false);
 			} catch (error) {
@@ -63,13 +63,22 @@ export default function IpBoard() {
 						IP Address Tracker
 					</h1>
 					<FormInput setOptions={setOptions} />
-					<IpData options={options} ipData={ipData} />
+					<IpData ipData={ipData} />
 				</div>
 			</header>
 
-			{/* <div id="map" className="h-full flex-grow"></div> */}
 			{loading ? <p>Loading...</p> : <IpMap ipMapData={ipData} />}
-			{/* <IpMap ipMapData={ipData} /> */}
+			<div className="attribution">
+				Challenge by
+				<a href="https://www.frontendmentor.io?ref=challenge" target="_blank">
+					Frontend Mentor
+				</a>
+				. Coded by
+				<a href="https://github.com/belunatic" target="_blank">
+					Abel Sila
+				</a>
+				.
+			</div>
 		</>
 	);
 }

@@ -22,25 +22,25 @@ export default function FormInput({ setOptions }: FormInputProp) {
 			option = `&domain=${ipValue}`;
 			setOptions(option);
 			setErrorMessage(false);
-			console.log(option);
+			// console.log(option);
 			//apiFetch(option);
 		} else if (ipRegEx.test(ipValue)) {
 			option = `&ipAddress=${ipValue}`;
 			setOptions(option);
 			setErrorMessage(false);
-			console.log(option);
+			// console.log(option);
 			//apiFetch(option);
 		} else if (ipValue === "") {
 			option = "";
 			setOptions(option);
 			setErrorMessage(false);
-			console.log(option);
+			// console.log(option);
 			//apiFetch();
 		} else {
 			//add error message
 			setErrorMessage(true);
 		}
-		console.log(option);
+		// console.log(option);
 	};
 
 	return (

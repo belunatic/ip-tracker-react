@@ -1,5 +1,3 @@
-import { useEffect, type SetStateAction } from "react";
-
 interface IpResult {
 	ip?: string;
 	city?: string;
@@ -11,55 +9,10 @@ interface IpResult {
 }
 
 interface IpDataProps {
-	options: string;
 	ipData: IpResult;
-	setIpData: React.Dispatch<SetStateAction<IpResult>>;
-	setLoading: React.Dispatch<SetStateAction<boolean>>;
 }
 
-export default function IpData({
-	options,
-	ipData,
-	setIpData,
-	setLoading,
-}: IpDataProps) {
-	//apikey
-	const apiKey = import.meta.env.VITE_API_KEY;
-
-	useEffect(() => {
-		const apiFetch = async () => {
-			setLoading(true);
-			try {
-				const res = await fetch(
-					`https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}${options}`
-				);
-
-				if (!res.ok) {
-					throw new Error(`Fetching error, status -> ${res.status}`);
-				}
-				//get the data
-				const data = await res.json();
-				const ipObject = {
-					ip: data.ip,
-					city: `${(data.location.city, data.location.region)}`,
-					zipCode: data.location.postalCode,
-					timezone: `UTC ${data.location.timezone}`,
-					isp: data.isp,
-					lat: data.location.lat,
-					lon: data.location.lng,
-				};
-
-				console.log(data, "this is the object", ipObject);
-				setIpData(ipObject);
-				setLoading(false);
-			} catch (error) {
-				console.error(error);
-			}
-		};
-
-		apiFetch();
-	}, [options, setLoading]);
-
+export default function IpData({ ipData }: IpDataProps) {
 	return (
 		<div
 			id="ip-results"
