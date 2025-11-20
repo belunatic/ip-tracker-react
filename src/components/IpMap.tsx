@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 
 export default function IpMap() {
 	const [mapData, setMapData] = useState(null);
