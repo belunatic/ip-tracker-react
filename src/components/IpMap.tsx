@@ -1,36 +1,28 @@
-import { useState } from "react";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import imageUrl from "../assets/images/icon-location.svg";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import L from "leaflet";
 
 export default function IpMap() {
-	const [mapData, setMapData] = useState(null);
-
-	const displayMap = () => {
-		let map = null;
-		let lat = 33.88835;
-		let lon = -118.30896;
-		//check to see if map element is initiated
-		//if so remove and add the new lat and lng
-		if (map != undefined) {
-			map.remove();
-		}
-		map = L.map("map").setView([lat, lon], 19);
-		L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-			maxZoom: 19,
-			attribution:
-				'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-		}).addTo(map);
-		const myIcon = L.icon({
-			iconUrl: "images/icon-location.svg",
-			iconSize: [40, 50],
-			// iconAnchor: [22, 94],
-		});
-		var marker = L.marker([lat, lon], { icon: myIcon }).addTo(map);
-		setMapData(map);
-	};
+	const customIcon = new L.Icon({
+		iconUrl: imageUrl,
+		iconSize: [40, 50], // size of the icon
+		// iconAnchor: [15, 30], // point of the icon which will correspond to marker's location
+		// popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
+	});
 	return (
 		<>
 			<div id="map" className="h-full flex-grow">
-				{displayMap()}
+				<MapContainer
+					center={[33.88835, -118.30896]}
+					zoom={19}
+					scrollWheelZoom={false}
+					style={{ width: "100%", height: "100%" }}>
+					<TileLayer
+						attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+					/>
+					<Marker position={[33.88835, -118.30896]} icon={customIcon}></Marker>
+				</MapContainer>
 			</div>
 		</>
 	);
