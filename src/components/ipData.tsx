@@ -6,20 +6,29 @@ interface IpResult {
 	zipCode?: string;
 	timezone?: string;
 	isp?: string;
+	lat?: number;
+	lon?: number;
 }
 
 interface IpDataProps {
 	options: string;
 	ipData: IpResult;
 	setIpData: React.Dispatch<SetStateAction<IpResult>>;
+	setLoading: React.Dispatch<SetStateAction<boolean>>;
 }
 
-export default function IpData({ options, ipData, setIpData }: IpDataProps) {
+export default function IpData({
+	options,
+	ipData,
+	setIpData,
+	setLoading,
+}: IpDataProps) {
 	//apikey
 	const apiKey = import.meta.env.VITE_API_KEY;
 
 	useEffect(() => {
 		const apiFetch = async () => {
+			setLoading(true);
 			try {
 				const res = await fetch(
 					`https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}${options}`
@@ -36,17 +45,20 @@ export default function IpData({ options, ipData, setIpData }: IpDataProps) {
 					zipCode: data.location.postalCode,
 					timezone: `UTC ${data.location.timezone}`,
 					isp: data.isp,
+					lat: data.location.lat,
+					lon: data.location.lng,
 				};
 
-				//console.log(ipObject);
+				console.log(data, "this is the object", ipObject);
 				setIpData(ipObject);
+				setLoading(false);
 			} catch (error) {
 				console.error(error);
 			}
 		};
 
 		apiFetch();
-	}, []);
+	}, [options, setLoading]);
 
 	return (
 		<div

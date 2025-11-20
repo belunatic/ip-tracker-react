@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FormInput from "./FormInput";
 import IpData from "./IpData";
 import IpMap from "./IpMap";
@@ -9,11 +9,51 @@ interface IpResult {
 	zipCode?: string;
 	timezone?: string;
 	isp?: string;
+	lat?: number;
+	lon?: number;
 }
 
 export default function IpBoard() {
 	const [options, setOptions] = useState<string>("");
-	const [ipResultData, setIpResultData] = useState<IpResult>({});
+	const [ipData, setIpData] = useState<IpResult>({});
+	const [loading, setLoading] = useState<boolean>(true);
+
+	//apikey
+	const apiKey = import.meta.env.VITE_API_KEY;
+
+	useEffect(() => {
+		const apiFetch = async () => {
+			setLoading(true);
+			try {
+				const res = await fetch(
+					`https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}${options}`
+				);
+
+				if (!res.ok) {
+					throw new Error(`Fetching error, status -> ${res.status}`);
+				}
+				//get the data
+				const data = await res.json();
+				const ipObject = {
+					ip: data.ip,
+					city: `${(data.location.city, data.location.region)}`,
+					zipCode: data.location.postalCode,
+					timezone: `UTC ${data.location.timezone}`,
+					isp: data.isp,
+					lat: data.location.lat,
+					lon: data.location.lng,
+				};
+
+				console.log(data, "this is the object", ipObject);
+				setIpData(ipObject);
+				setLoading(false);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		apiFetch();
+	}, [options]);
 
 	return (
 		<>
@@ -23,16 +63,13 @@ export default function IpBoard() {
 						IP Address Tracker
 					</h1>
 					<FormInput setOptions={setOptions} />
-					<IpData
-						options={options}
-						setIpData={setIpResultData}
-						ipData={ipResultData}
-					/>
+					<IpData options={options} ipData={ipData} />
 				</div>
 			</header>
 
 			{/* <div id="map" className="h-full flex-grow"></div> */}
-			<IpMap />
+			{loading ? <p>Loading...</p> : <IpMap ipMapData={ipData} />}
+			{/* <IpMap ipMapData={ipData} /> */}
 		</>
 	);
 }
