@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useState, type SetStateAction } from "react";
 import imageUrl from "../assets/images/icon-arrow.svg";
 
-export default function FormInput() {
+interface FormInputProp {
+	setOptions: React.Dispatch<SetStateAction<string>>;
+}
+
+export default function FormInput({ setOptions }: FormInputProp) {
 	const [ipValue, setIpValue] = useState<string>("");
 	const [errorMessage, setErrorMessage] = useState<boolean>(false);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-
 		let option = "";
+
 		//regex
 		const domainRegEx = /^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}$/i;
 		const ipRegEx =
@@ -16,16 +20,19 @@ export default function FormInput() {
 
 		if (domainRegEx.test(ipValue)) {
 			option = `&domain=${ipValue}`;
+			setOptions(option);
 			setErrorMessage(false);
 			console.log(option);
 			//apiFetch(option);
 		} else if (ipRegEx.test(ipValue)) {
 			option = `&ipAddress=${ipValue}`;
+			setOptions(option);
 			setErrorMessage(false);
 			console.log(option);
 			//apiFetch(option);
 		} else if (ipValue === "") {
 			option = "";
+			setOptions(option);
 			setErrorMessage(false);
 			console.log(option);
 			//apiFetch();
