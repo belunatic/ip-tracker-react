@@ -1,5 +1,6 @@
 import FormInput from "./components/FormInput";
-import IpData from "./components/ipData";
+import IpData from "./components/IpData";
+import IpMap from "./components/IpMap";
 
 function App() {
 	return (
@@ -10,11 +11,12 @@ function App() {
 						IP Address Tracker
 					</h1>
 					<FormInput />
-					<IpData />
+					{/* <IpData /> */}
 				</div>
 			</header>
 
-			<div id="map" className="h-full flex-grow"></div>
+			{/* <div id="map" className="h-full flex-grow"></div> */}
+			<IpMap />
 		</div>
 	);
 }
